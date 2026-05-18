@@ -39,6 +39,11 @@ df = df[
 # 学籍番号を大文字にする
 df["student_number"] = df["student_number"].str.upper()
 
+
+# ユーザ本人について、(デジコア側の事情で)氏名が逆に入っているので、修正する
+df[["first_name", "last_name"]] = df[["last_name", "first_name"]]
+
+
 # is_maleをgenderに写し、is_maleカラムを捨てる
 df["gender"] = df["is_male"].map({1: "男", 0: "女"})
 df = df.drop(columns=["is_male"])
@@ -106,10 +111,6 @@ print(old_df[old_df["student_number"].isin(student_numbers)])
 # だめだったやつを捨てる
 df = df.dropna(subset=phone_numbers)
 
-# ユーザ本人について、(デジコア側の事情で)氏名が逆に入っているので、修正する
-
-df[["first_name", "last_name"]] = df[["last_name", "first_name"]]
-
 # 保護者氏名の分離
 # parent_nameに名前が存在し、parent_{last,first}_nameが空、
 # 全てについて非NaN、parent_nameのみNaN という3種類の"正常"な状態が存在する。
@@ -144,7 +145,7 @@ def split_parent_name(row):
             if first:
                 return s_last_str, first
 
-    # 3. 分割できない場合は、parent_nameを名字とし、名前を空(NaN)にする
+    # 3. 分割できない場合は、保護者氏名を空(NaN)にする
     return nan, nan
 
 

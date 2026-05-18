@@ -161,9 +161,9 @@ print(old_df[old_df["student_number"].isin(student_numbers)])
 # parent_nameを削除
 df = df.drop(columns=["parent_name"])
 
-# 本人、保護者それぞれの氏名を空白を挟んで結合
-df["name"] = df["last_name"] + " " + df["first_name"]
-df["parent_name"] = df["parent_last_name"] + " " + df["parent_first_name"]
+# 本人、保護者それぞれの氏名を、全角スペースを挟んで結合
+df["name"] = df["last_name"] + "　" + df["first_name"]
+df["parent_name"] = df["parent_last_name"] + "　" + df["parent_first_name"]
 
 # 不要になったカラムを捨てる
 df = df.drop(

@@ -17,8 +17,13 @@
                 ps: with ps; [
                   pandas
                   pandas-stubs
-                  phonenumbers
+
                   numpy
+
+                  phonenumbers
+
+                  python-docx
+                  openpyxl
                 ]
               ))
             ];

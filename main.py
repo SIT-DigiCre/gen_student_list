@@ -2,9 +2,12 @@ import pandas as pd
 from sys import argv, exit
 from phonenumbers import parse, format_number, is_valid_number, PhoneNumberFormat
 from numpy import nan
+from docx import Document
 
-if len(argv) < 2:
-    print(f"Usage: python {argv[0]} <input CSV>")
+if len(argv) < 4:
+    print(
+        f"Usage: python {argv[0]} <デジコアDB CSV> <部員名簿テンプレート xlsx> <役員変更届 docx>"
+    )
     exit(1)
 
 df = pd.read_csv(
@@ -170,20 +173,59 @@ df = df.drop(
     columns=["last_name", "first_name", "parent_last_name", "parent_first_name"]
 )
 
+# 役職周りを設定する
+
+# docxからテーブルを読み込む
+doc = Document(argv[3])
+res = []
+for table in doc.tables:
+    for row in table.rows:
+        res.append([cell.text.strip() for cell in row.cells])
+    if res[0][0] == "No":
+        break
+    else:
+        res.clear()
+# データフレームにする
+stuffs = pd.DataFrame(res)
+stuffs.columns = stuffs.iloc[0].str.replace(r"\s+", "", regex=True)
+stuffs = stuffs[1:].reset_index(drop=True)
+
+# 役職名と学籍番号のみを抽出、カラムの名前を良い感じに
+stuffs = stuffs[["役職名", "学籍番号"]].rename(
+    columns={"役職名": "position", "学籍番号": "student_number"}
+)
+# dfに合わせ、stuffsの学籍番号も大文字にする
+stuffs["student_number"] = stuffs["student_number"].str.upper()
+
+print("\n\n-----役員-----")
+print(stuffs)
+
+# stuffsとdfを結合する
+df = df.merge(stuffs, on="student_number", how="left")
+
 # done!
 print("\n\n")
 print(df)
 
-df.to_csv(
-    "./out.csv",
-    index=False,
-    columns=[
-        "student_number",
-        "school_grade",
-        "gender",
-        "name",
-        "phone_number",
-        "parent_name",
-        "parent_cellphone_number",
-    ],
-)
+with pd.ExcelWriter(
+    argv[2], engine="openpyxl", mode="a", if_sheet_exists="overlay"
+) as writer:
+    df[
+        [
+            "position",
+            "student_number",
+            "school_grade",
+            "gender",
+            "name",
+            "phone_number",
+            "parent_name",
+            "parent_cellphone_number",
+        ]
+    ].to_excel(
+        writer,
+        sheet_name="部員名簿",
+        startrow=7,
+        startcol=1,
+        index=False,
+        header=False,
+    )

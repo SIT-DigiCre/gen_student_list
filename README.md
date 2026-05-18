@@ -1,3 +1,9 @@
+# 概要
+
+部員名簿を半自動で作成するやつです
+
+# 準備
+
 ビューの作成(SysDev>知見 内 部員名簿の作成より)
 ```sql
 CREATE VIEW user_full_profiles (
@@ -32,3 +38,10 @@ phpMyAdmin上で、
 SELECT student_number, is_male, first_name, last_name, school_grade, phone_number, parent_name, parent_first_name, parent_last_name, parent_cellphone_number FROM `user_full_profiles` WHERE is_member = 1 AND is_graduated = 0 AND active_limit >= TIMESTAMP "<来年度始まり>-05-01 00:00:00";
 ```
 を実行し、`CSV`としてエクスポート
+
+[芝浦工大公式ページ](https://www.shibaura-it.ac.jp/campus_life/guide/document.html)より、部員名簿のフォーマットを落としてくる。  
+また、最新の役員変更届(入力済み)もダウンロードしておく。
+
+# 実行
+
+python main.py <デジコアDB CSV> <部員名簿テンプレート xlsx> <役員変更届 docx>

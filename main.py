@@ -161,9 +161,29 @@ print(old_df[old_df["student_number"].isin(student_numbers)])
 # parent_nameを削除
 df = df.drop(columns=["parent_name"])
 
+# 本人、保護者それぞれの氏名を空白を挟んで結合
+df["name"] = df["last_name"] + " " + df["first_name"]
+df["parent_name"] = df["parent_last_name"] + " " + df["parent_first_name"]
+
+# 不要になったカラムを捨てる
+df = df.drop(
+    columns=["last_name", "first_name", "parent_last_name", "parent_first_name"]
+)
 
 # done!
 print("\n\n")
 print(df)
 
-df.to_csv("./out.csv", index=False)
+df.to_csv(
+    "./out.csv",
+    index=False,
+    columns=[
+        "student_number",
+        "school_grade",
+        "gender",
+        "name",
+        "phone_number",
+        "parent_name",
+        "parent_cellphone_number",
+    ],
+)

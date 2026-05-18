@@ -29,6 +29,6 @@ CREATE VIEW user_full_profiles (
 ```
 phpMyAdmin上で、
 ```sql
-SELECT student_number, is_male, first_name, last_name, phone_number, parent_name, parent_first_name, parent_last_name, parent_cellphone_number FROM `user_full_profiles` WHERE is_member = 1 AND is_graduated = 0 AND active_limit >= TIMESTAMP "<来年度始まり>-05-01 00:00:00";
+SELECT student_number, is_male, first_name, last_name, school_grade, phone_number, parent_name, parent_first_name, parent_last_name, parent_cellphone_number FROM `user_full_profiles` WHERE is_member = 1 AND is_graduated = 0 AND active_limit >= TIMESTAMP "<来年度始まり>-05-01 00:00:00";
 ```
 を実行し、`CSV`としてエクスポート

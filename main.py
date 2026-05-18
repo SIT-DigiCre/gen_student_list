@@ -12,6 +12,8 @@ df = pd.read_csv(argv[1], encoding="utf-8", dtype={"phone_number": str, "parent_
 # 全ての空欄について、NaNとして扱う。
 df = df.replace("", nan)
 
+# 念の為カラムを絞る
+
 df = df[[
     "student_number",
     "is_male",
@@ -24,8 +26,12 @@ df = df[[
     "parent_cellphone_number"
 ]]
 
+# is_maleをgenderに写す
+
 df["gender"] = df["is_male"].map({1: "男", 0: "女"})
 df = df.drop(columns=["is_male"])
+
+# 電話番号にハイフンを入れる
 
 def format_phone(val):
     # NaNにはNaNを
@@ -49,16 +55,19 @@ def format_phone(val):
             # だめだったら、元の番号を表示、CSVにはエラー表示付きで出力させておく
             # やっぱNaNにする
             print(f"Parse Error! Phone Number: {val}")
-            # return f"Error: {val}"
             return nan
 
+# 変換適用前のデータフレームを保持する
 old_df = df.copy()
 
 phone_numbers = ["phone_number", "parent_cellphone_number"]
 df[phone_numbers] = df[phone_numbers].map(format_phone)
 
 
-
+# パースできなかった、NaNであったレコードの学籍番号一覧を取得
 student_numbers = df[df[phone_numbers].isna().any(axis=1)]["student_number"]
+# 旧DFからレコードを持ってきて、だめだったやつを表示
 print(old_df[old_df["student_number"].isin(student_numbers)])
 df = df.dropna(subset=phone_numbers)
+
+

@@ -40,6 +40,21 @@ df["student_number"] = df["student_number"].str.upper()
 df["gender"] = df["is_male"].map({1: "男", 0: "女"})
 df = df.drop(columns=["is_male"])
 
+# 学年の表記を指定された形式にする
+df["school_grade"] = df["school_grade"].map(
+    {
+        1: "1年",
+        2: "2年",
+        3: "3年",
+        4: "4年",
+        5: "修1",
+        6: "修2",
+        7: "博1",
+        8: "博2",
+        9: "博3",
+    }
+)
+
 # 電話番号にハイフンを入れる
 
 

@@ -1,3 +1,5 @@
+[![SUSHI-WARE LICENSE](https://img.shields.io/badge/license-SUSHI--WARE%F0%9F%8D%A3-blue.svg)](https://github.com/MakeNowJust/sushi-ware)
+
 # 概要
 
 部員名簿を半自動で作成するやつです
@@ -39,7 +41,7 @@ SELECT student_number, is_male, first_name, last_name, school_grade, phone_numbe
 ```
 を実行し、`CSV`としてエクスポート
 
-[芝浦工大公式ページ](https://www.shibaura-it.ac.jp/campus_life/guide/document.html)より、部員名簿のフォーマットを落としてくる。  
+[芝浦工大公式ページ](https://www.shibaura-it.ac.jp/campus_life/guide/document.html)より、部員名簿のテンプレートを落としてくる。  
 また、最新の役員変更届(入力済み)もダウンロードしておく。
 
 # 実行
